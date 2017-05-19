@@ -10,8 +10,8 @@ import time
 import yaml
 
 from c7n.commands import validate as cc_validate_yaml
+from c7n_mailer.sqs_queue_processor import MailerSqsQueueProcessor
 from dateutil.tz import gettz
-from pkg_resources import load_entry_point
 
 
 def get_all_custodian_yaml_files(policy_dir='/custodian/policies/*'):
@@ -45,10 +45,13 @@ def set_aws_custodian_account_env_secrets(secrets):
         aws_custodian_account]['AWS_ACCESS_KEY_ID']
 
 
-def update_lambda_mailer(logger):
+def run_c7n_mailer(logger):
     logger.info('updating the mailer lambda function')
-    sys.argv = ['c7n-mailer', '-c', '/custodian/email/email-config.yml']
-    load_entry_point('c7n-mailer', 'console_scripts', 'c7n-mailer')()
+    email_config_filepath = '/custodian/email/email-config.yml'
+    email_config = yaml.load(get_file_contents(email_config_filepath), Loader=yaml.SafeLoader)
+    session = boto3.Session()
+    mailer_sqs_queue_processor = MailerSqsQueueProcessor(email_config, session, logger)
+    mailer_sqs_queue_processor.run()
 
 
 def aws_get_all_regions():

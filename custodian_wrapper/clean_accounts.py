@@ -10,8 +10,6 @@ import utils
 
 from easyprocess import EasyProcess
 
-__requires__ = 'c7n-mailer'
-
 custodian_live_fire    = os.environ.get('CUSTODIAN_LIVE_FIRE', False)
 custodian_run_interval = 900
 logger                 = logging.getLogger('custodian.policy')
@@ -142,7 +140,7 @@ def clear_all_cache(cache_dir):
         os.remove(cache_file_abs_path)
 
 
-def main_loop(parallel=True, run_once=False, update_mailer=False):
+def main_loop(parallel=True, run_once=False, run_mailer=False):
     aws_cache_dir               = 'aws_cache'
     s3_logging_bucket           = secrets['s3_logging_bucket']
     wrapper_config              = utils.get_wrapper_config()
@@ -154,8 +152,8 @@ def main_loop(parallel=True, run_once=False, update_mailer=False):
         aws_all_regions, all_listed_regions_policies, s3_logging_bucket)
     logging.info(start_log_msg)
     qty_custodian_run_commands = len(all_custodian_commands)
-    if update_mailer:
-        utils.update_lambda_mailer(logger)
+    if run_mailer:
+        utils.run_c7n_mailer(logger)
     while True:
         if os.path.exists(aws_cache_dir):
             clear_all_cache(aws_cache_dir)
@@ -186,6 +184,8 @@ if reports_only_mode:
         sys.exit(0)
 
 if __name__ == '__main__':
+    utils.run_c7n_mailer(logger)
+    sys.exit(0)
     if custodian_live_fire:
         # note, the mailer doesn't update when run locally. Only when run through docker.
         utils.update_lambda_mailer(logger)

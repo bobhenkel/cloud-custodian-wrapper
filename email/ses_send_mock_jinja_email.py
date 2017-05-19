@@ -102,7 +102,7 @@ email_metadata = {
                 u'subject':
                 u'URGENT: Your AWS Resources will be shutdown.',
                 u'template':
-                u'mail-template.html',
+                u'jinja_template.j2',
                 u'to': [u'resource-owner', u'resource-group'],
                 u'transport': {
                     u'queue':
@@ -133,7 +133,7 @@ email_metadata = {
         },
         'action': {
             u'subject': u'URGENT: Your AWS Resources will be shutdown.',
-            u'template': u'mail-template.html',
+            u'template': u'jinja_template.j2',
             u'to': [u'resource-owner', u'resource-group'],
             u'transport': {
                 u'queue':
@@ -263,7 +263,7 @@ def tidylib_validate_html(rendered_html_data):
         sys.exit(0)
 
 
-custodian_mail_template_location = '/custodian/email/msg-templates/mail-template.html.j2'
+custodian_mail_template_location = '/custodian/email/jinja_template.j2'
 final_unrendered_email_template = get_final_unrendered_email_message()
 final_rendered_email_template = get_final_rendered_email_message(final_unrendered_email_template)
 

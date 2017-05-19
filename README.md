@@ -45,7 +45,7 @@
 - only print the red bold font if priority_header is set and is 1?
 - sort policies in a way so they cause the least throttling by boto (get all repeated account/region combinations, and evenly distribute them in the array before multiprocessing)
 - tag set to make custodian not be able to delete (ldap, mirrors, dns, federation broker), preferred images can't be deleted also (or value_from filters)
-- flake8 tests dir
+- setup test sqs queue and account to run tests on (seperatate wrapper and mailer configs)
 - find out why emails can't be forwarded
 - make a lot more policies (SGs, EC2 tags, RDS tags, etc)
 - make something that validates the wrapper-config.yml

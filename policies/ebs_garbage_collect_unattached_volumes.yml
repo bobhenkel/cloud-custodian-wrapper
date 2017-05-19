@@ -29,7 +29,7 @@ policies:
       days: 3
     - type: notify
       priority_header: '1'
-      template: default.html
+      template: /custodian/email/jinja_template.j2
       subject: "URGENT: Your unattached AWS EBS Volumes will be DELETED in 3 DAYS!"
       to:
         - resource-owner
@@ -56,7 +56,7 @@ policies:
       days: 15
     - type: notify
       priority_header: '1'
-      template: default.html
+      template: /custodian/email/jinja_template.j2
       subject: "URGENT: Your unattached AWS EBS Volumes will be DELETED in 15 DAYS!"
       to:
         - resource-owner
@@ -87,7 +87,7 @@ policies:
   actions:
     - delete
     - type: notify
-      template: default.html
+      template: /custodian/email/jinja_template.j2
       subject: "Your AWS unattached EBS Volumes Were Deleted"
       to:
         - resource-owner

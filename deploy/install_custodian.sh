@@ -7,13 +7,13 @@ rm -rf /var/cache/apk/*
 mkdir -p /custodian/src
 cd /custodian/src
 # git clone https://github.com/capitalone/cloud-custodian.git
-git clone https://github.com/JohnTheodore/cloud-custodian.git; cd cloud-custodian; git checkout less_log_spam; cd ..;
-cp -r /custodian/src/cloud-custodian/tools/c7n_mailer /custodian/mailer
+git clone https://github.com/JohnTheodore/cloud-custodian.git; cd cloud-custodian; git checkout c7n_mailer_ldap_cleanup; cd ..;
+cp -r /custodian/src/cloud-custodian/tools/c7n_mailer /custodian/custodian_wrapper/c7n_mailer
 rm -rf /custodian/src
-cd /custodian/mailer
+cd /custodian/custodian_wrapper/c7n_mailer
 echo "Installing mailer requirements"
 pip install -r ./requirements.txt
 python setup.py develop
-rm /custodian/mailer/msg-templates/default.html.j2
-cp /custodian/email/msg-templates/mail-template.html.j2 /custodian/mailer/msg-templates/default.html.j2
+rm /custodian/custodian_wrapper/c7n_mailer/msg-templates/default.html.j2
+cp /custodian/email/msg-templates/mail-template.html.j2 /custodian/custodian_wrapper/c7n_mailer/msg-templates/default.html.j2
 apk del git

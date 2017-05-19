@@ -1,4 +1,5 @@
 email/email-config.yml
+config.json
 tests/__pycache__
 aws_secrets.yml
 aws-secrets.yml
