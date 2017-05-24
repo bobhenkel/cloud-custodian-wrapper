@@ -13,6 +13,9 @@ from c7n.commands import validate as cc_validate_yaml
 from c7n_mailer.sqs_queue_processor import MailerSqsQueueProcessor
 from dateutil.tz import gettz
 
+# the mailer requires this when it initializses
+os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'
+
 
 def get_all_custodian_yaml_files(policy_dir='/custodian/policies/*'):
     return glob.glob(policy_dir)
@@ -46,12 +49,11 @@ def set_aws_custodian_account_env_secrets(secrets):
 
 
 def run_c7n_mailer(logger):
-    logger.info('updating the mailer lambda function')
     email_config_filepath = '/custodian/email/email-config.yml'
     email_config = yaml.load(get_file_contents(email_config_filepath), Loader=yaml.SafeLoader)
     session = boto3.Session()
     mailer_sqs_queue_processor = MailerSqsQueueProcessor(email_config, session, logger)
-    mailer_sqs_queue_processor.run()
+    mailer_sqs_queue_processor.run(parallel=False)
 
 
 def aws_get_all_regions():

@@ -1,10 +1,10 @@
 accounts: 
-  # core-services-dev:
-  #   all_regions: True
-  core-services-prod:
+  core-services-dev:
     regions:
       us-east-1:
-    # all_regions: True
+  #   all_regions: True
+  # core-services-prod:
+  #   all_regions: True
   # symc-dev:
   #   all_regions: True
   # symc-prod:

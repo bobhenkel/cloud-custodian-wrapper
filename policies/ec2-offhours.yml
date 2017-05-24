@@ -6,8 +6,6 @@ policies:
         tag: StopAfterHours
         default_tz: pt
         offhour: 19
-      - type: instance-age
-        hours: 2
     actions:
       - stop
 
@@ -18,10 +16,5 @@ policies:
         tag: StartAfterHours
         default_tz: pt
         onhour: 12
-      - type: value
-        value: 1
-        key: LaunchTime
-        op: less-than
-        value_type: age
     actions:
       - start

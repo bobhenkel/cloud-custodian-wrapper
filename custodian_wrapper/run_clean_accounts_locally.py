@@ -34,5 +34,5 @@ if __name__ == '__main__':
     all_custodian_yaml_files = get_all_custodian_yaml_files()
     replace_string_on_files('{CC_SQS_URL}', cc_sqs_url, all_custodian_yaml_files)
     validate_custodian_yaml_files(all_custodian_yaml_files)
-    main_loop(run_once=True, parallel=parallel)
+    main_loop(run_once=True, parallel=parallel, run_mailer=True)
     replace_string_on_files(cc_sqs_url, '{CC_SQS_URL}', all_custodian_yaml_files)

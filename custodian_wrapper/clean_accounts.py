@@ -12,13 +12,14 @@ from easyprocess import EasyProcess
 
 custodian_live_fire    = os.environ.get('CUSTODIAN_LIVE_FIRE', False)
 custodian_run_interval = 900
-logger                 = logging.getLogger('custodian.policy')
+logger                 = logging.getLogger('custodian')
 parallel_process_max   = 16
 reports_only_mode      = os.environ.get('CUSTODIAN_REPORTS_ONLY_MODE', False)
 secrets                = utils.get_secrets()
 utils.set_aws_custodian_account_env_secrets(secrets)
 logging.basicConfig(level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.getLogger('botocore').setLevel(logging.ERROR)
 
 
 def get_argv_custodian_run_cmd(sts_role, region, policy, account_name, s3_logging_bucket):
@@ -152,8 +153,6 @@ def main_loop(parallel=True, run_once=False, run_mailer=False):
         aws_all_regions, all_listed_regions_policies, s3_logging_bucket)
     logging.info(start_log_msg)
     qty_custodian_run_commands = len(all_custodian_commands)
-    if run_mailer:
-        utils.run_c7n_mailer(logger)
     while True:
         if os.path.exists(aws_cache_dir):
             clear_all_cache(aws_cache_dir)
@@ -174,19 +173,16 @@ def main_loop(parallel=True, run_once=False, run_mailer=False):
         pool.join()
         utils.log_end_of_cycle_sleeping(custodian_run_interval, start_time,
                                   qty_custodian_run_commands, logging)
+        if run_mailer:
+            utils.run_c7n_mailer(logger)
         if run_once:
             sys.exit(0)
         time.sleep(custodian_run_interval)
 
 
 if reports_only_mode:
-        reports.print_reports()
-        sys.exit(0)
+    reports.print_reports()
+    sys.exit(0)
 
 if __name__ == '__main__':
-    utils.run_c7n_mailer(logger)
-    sys.exit(0)
-    if custodian_live_fire:
-        # note, the mailer doesn't update when run locally. Only when run through docker.
-        utils.update_lambda_mailer(logger)
-    main_loop()
+    main_loop(run_mailer=True)

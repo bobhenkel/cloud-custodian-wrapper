@@ -14,6 +14,4 @@ cd /custodian/custodian_wrapper/c7n_mailer
 echo "Installing mailer requirements"
 pip install -r ./requirements.txt
 python setup.py develop
-rm /custodian/custodian_wrapper/c7n_mailer/msg-templates/default.html.j2
-cp /custodian/email/msg-templates/mail-template.html.j2 /custodian/custodian_wrapper/c7n_mailer/msg-templates/default.html.j2
 apk del git
