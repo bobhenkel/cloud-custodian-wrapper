@@ -1,29 +1,30 @@
 policies:
 
-- name: ec2-tag-compliance-mark
+- name: ec2-tag-noncompliance-mark-shutdown
   resource: ec2
-  description: |
+  comments: |
     Schedule a resource that does not meet tag compliance policies
     to be stopped in one day.
   filters:
     - State.Name: running
-    - "tag:maid_status": absent
     - "tag:aws:autoscaling:groupName": absent
-    - and:
-      - or:
-        - "tag:BusinessUnit": absent
-        - "tag:CreatorName": absent
-        - "tag:Project": absent
+    - "tag:maid_status": absent
+    - "tag:BusinessUnit": absent
+    - "tag:Environment": absent
+    - "tag:Project": absent
+    - "tag:OwnerEmail": absent
+
   actions:
     - type: notify
-      template: default.html
-      subject: "URGENT: Your AWS EC2 Resources will be shutdown."
+      template_format: html
+      template: /custodian/email/jinja_template.j2
+      subject: "URGENT: Your AWS EC2 Resources will be shutdown tomorrow!"
       to:
         - resource-owner
-        - resource-group
+        - ldap_uid_tags
       transport:
         type: sqs
-        queue: https://sqs.us-east-1.amazonaws.com/686559647175/c7n-mailer-test
+        queue: https://sqs.us-east-1.amazonaws.com/172119256206/cloudcustodian-mailer-devtest
     - type: mark-for-op
       op: stop
       days: 1 
@@ -37,34 +38,42 @@ policies:
   filters:
     - State.Name: running
     - and:
+      - "tag:aws:autoscaling:groupName": absent
       - "tag:maid_status": not-null
       - "tag:BusinessUnit": not-null
-      - "tag:CreatorName": not-null
+      - "tag:Environment": not-null
       - "tag:Project": not-null
+      - "tag:OwnerEmail": not-null
   actions:
     - unmark
 
-- name: ec2-tag-compliance-stop
+- name: ec2-tag-noncompliance-mark-terminate
   resource: ec2
-  comment: |
-    Stop all non autoscaling group instances previously marked
-    for stoppage by today's date, and schedule termination in
-    1 days. Also verify that they continue to not meet tagging
-    policies.
+  comments: |
+    Terminate any instances violating the tagging policy 2 days after initially found.
   filters:
     - type: marked-for-op
       op: stop
   actions:
     - stop
+    - type: notify
+      template_format: html
+      template: /custodian/email/jinja_template.j2
+      subject: "URGENT: Your AWS EC2 Resources will be terminated tomorrow!"
+      to:
+        - resource-owner
+        - ldap_uid_tags
+      transport:
+        type: sqs
+        queue: https://sqs.us-east-1.amazonaws.com/172119256206/cloudcustodian-mailer-devtest
     - type: mark-for-op
       op: terminate
       days: 1
 
-- name: ec2-tag-compliance-terminate
+- name: ec2-tag-noncompliance-terminate
   resource: ec2
   comment: |
-    Terminate all non autoscaling group instances previously marked
-    for termination by today's date.
+    Terminate all instances previously markedfor termination by today's date.
   filters:
     - type: marked-for-op
       op: terminate 

@@ -61,6 +61,10 @@
   <a href="https://console.aws.amazon.com/ec2/v2/home?region={{ region }}#Volumes:search={{ volume_id }}">{{ volume_id }}</a>
 {%- endmacro %}
 
+{% macro get_ec2_search_hyperlink(ec2_id, resource, action, policy, region) -%}
+<a href="https://{{ region }}.console.aws.amazon.com/ec2/v2/home?region={{ region }}#Instances:search={{ ec2_id }}">{{ ec2_id }}</a>
+{%- endmacro %}
+
 {% macro pretty_print_datetime(datetime_string, resource, action, policy, region) -%}
   {{ datetime_string|date_time_format(tz_str='US/Pacific', format='%Y %b %d %H:%M %Z') }}
 {%- endmacro %}
@@ -99,7 +103,7 @@
   {% endfor %}
 {%- endmacro %}
 
-{% set custodian_tables = { 'ebs': { 'headers': { 'VolumeId': { 'macros': [get_ebs_search_hyperlink] }, 'Future action': { 'display_name': 'Future Action', 'macros': [get_maid_future_action] }, 'CreateTime': { 'display_name': 'CreationTime', 'macros': [pretty_print_datetime] }, 'State': '', 'Tags': { 'macros': [pretty_print_tags] } } } } %}
+{% set custodian_tables = { 'ebs': { 'headers': { 'VolumeId': { 'macros': [get_ebs_search_hyperlink] }, 'Future action': { 'display_name': 'Future Action', 'macros': [get_maid_future_action] }, 'CreateTime': { 'display_name': 'CreationTime', 'macros': [pretty_print_datetime] }, 'State': '', 'Tags': { 'macros': [pretty_print_tags] } } }, 'ec2': { 'headers': { 'InstanceType': {'display_name': 'Flavor'}, 'InstanceId': {'display_name': 'Instance ID', 'macros': [get_ec2_search_hyperlink]}, 'Future action': { 'display_name': 'Future Action', 'macros': [get_maid_future_action] }, 'LaunchTime': { 'display_name': 'LaunchTime', 'macros': [pretty_print_datetime] }, 'Tags': { 'macros': [pretty_print_tags] } } } } %}
 {% set aws_resource_type = policy['resource'] %}
 {% set table_headers = custodian_tables[aws_resource_type]['headers'].keys()|sort() %}
 {% set custodian_tables_resource_metadata = custodian_tables[aws_resource_type] %}

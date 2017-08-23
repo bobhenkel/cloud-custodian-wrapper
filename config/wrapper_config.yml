@@ -1,8 +1,8 @@
 accounts: 
   core-services-dev:
-    regions:
-      us-east-1:
-  #   all_regions: True
+    # regions:
+    #   us-east-2:
+    all_regions: True
   # core-services-prod:
   #   all_regions: True
   # symc-dev:
@@ -20,9 +20,10 @@ accounts:
 # So if you did all_regions, each of the global run policies would run in all regions.
 # If you only listed us-east-1 under a regions key for an account, only us-east-1 would be run.
 all_listed_regions_policies:
-  # - ebs_delete_on_expiresat_tag.yml
+  # - ec2-require-tags.yml
+  - ebs_delete_on_expiresat_tag.yml
   - ebs_garbage_collect_unattached_volumes.yml
-  # - ec2_delete_on_expiresat_tag.yml
-  # - ami_deregister_on_expiresat_tag.yml
-  # - snapshots_delete_on_expiresat_tag.yml
-  # - ec2-offhours.yml
+  - ec2_delete_on_expiresat_tag.yml
+  - ami_deregister_on_expiresat_tag.yml
+  - snapshots_delete_on_expiresat_tag.yml
+  - ec2-offhours.yml

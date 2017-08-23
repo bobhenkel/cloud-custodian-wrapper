@@ -33,6 +33,133 @@ jinja2.filters.FILTERS['get_date_time_delta'] = get_date_time_delta
 email_metadata = {
     'account': 'aws_account_03',
     'region': 'us-east-2',
+    'ec2': {
+        'policy': {u'actions': [{u'to': [u'resource-owner', u'ldap_uid_tags'], u'type': u'notify', u'transport': {u'queue': u'https://sqs.us-east-1.amazonaws.com/172119256206/cloudcustodian-mailer-devtest', u'type': u'sqs'}, u'template': u'default.html', u'subject': u'URGENT: Your AWS EC2 Resources will be shutdown.'}, {u'type': u'mark-for-op', u'days': 1, u'op': u'stop'}], u'resource': u'ec2', u'name': u'ec2-tag-compliance-mark', u'filters': [{u'State.Name': u'running'}, {u'tag:maid_status': u'absent'}, {u'tag:BusinessUnit': u'absent'}, {u'tag:Environment': u'absent'}, {u'tag:Project': u'absent'}, {u'tag:OwnerEmail': u'absent'}], u'description': u'Schedule a resource that does not meet tag compliance policies\nto be stopped in one day.\n'},
+        'action': {u'to': [u'resource-owner', u'ldap_uid_tags'], u'type': u'notify', u'transport': {u'queue': u'https://sqs.us-east-1.amazonaws.com/172119256206/cloudcustodian-mailer-devtest', u'type': u'sqs'}, u'template': u'default.html', u'subject': u'URGENT: Your AWS EC2 Resources will be shutdown.'},
+        'resources': [
+            {
+                'Monitoring': {
+                    'State':'disabled'
+                },
+                'PublicDnsName':'ec2-52-15-151-43.us-east-2.compute.amazonaws.com',
+                'State':{
+                    'Code':16,
+                    'Name':'running'
+                },
+                'EbsOptimized':False,
+                'LaunchTime':'2017-06-01T21:01:39+00:00',
+                'PublicIpAddress':'52.15.151.43',
+                'PrivateIpAddress':'172.31.11.109',
+                'ProductCodes':[
+
+                ],
+                'VpcId':'vpc-e66ce98f',
+                'StateTransitionReason':'',
+                'InstanceId':'i-06190438c9cfe79c7',
+                'EnaSupport':True,
+                'ImageId':'ami-618fab04',
+                'PrivateDnsName':'ip-172-31-11-109.us-east-2.compute.internal',
+                'KeyName':'richard_gooch',
+                'SecurityGroups':[
+                    {
+                        'GroupName':'launch-wizard-3',
+                        'GroupId':'sg-a2bc95cb'
+                    }
+                ],
+                'ClientToken':'zbxuO1496350898699',
+                'SubnetId':'subnet-9cff75f5',
+                'InstanceType':'t2.nano',
+                'NetworkInterfaces':[
+                    {
+                        'Status':'in-use',
+                        'MacAddress':'02:d2:88:f4:2a:cb',
+                        'SourceDestCheck':True,
+                        'VpcId':'vpc-e66ce98f',
+                        'Description':'',
+                        'NetworkInterfaceId':'eni-074a166f',
+                        'PrivateIpAddresses':[
+                            {
+                                'PrivateDnsName':' ip-172-31-11-109.us-east-2.compute.internal',
+                                'PrivateIpAddress':'172.31.11.109',
+                                'Primary':True,
+                                'Association':{
+                                    'PublicIp':'52.15.151.43',
+                                    'PublicDnsName':'ec2-52-15-151-43.us-east-2.amazonaws.com',
+                                    'IpOwnerId':'amazon'
+                                }
+                            }
+                        ],
+                        'PrivateDnsName':'ip-172-31-11-109.us-east-2.compute.internal',
+                        'Attachment':{
+                            'Status':'attached',
+                            'DeviceIndex':0,
+                            'DeleteOnTermination':True,
+                            'AttachmentId':'eni-attach-6e498e87',
+                            'AttachTime':'2017-06-01T21:01:39+00:00'
+                        },
+                        'Groups':[
+                            {
+                                'GroupName':'launch-wizard-3',
+                                'GroupId':'sg-a2bc95cb'
+                            }
+                        ],
+                        'Ipv6Addresses':[
+
+                        ],
+                        'OwnerId':'830317098777',
+                        'PrivateIpAddress':'172.31.11.109',
+                        'SubnetId':'subnet-9cff75f5',
+                        'Association':{
+                            'PublicIp':'52.15.151.43',
+                            'PublicDnsName':'ec2-52-15-151-43.us-east-2.compute.amazonaws.com',
+                            'IpOwnerId':'amazon'
+                        }
+                    }
+                ],
+                'SourceDestCheck':True,
+                'Placement':{
+                    'GroupName':'',
+                    'Tenancy':'default',
+                    'AvailabilityZone':'us-east-2a'
+                },
+                'Hypervisor':'xen',
+                'BlockDeviceMa ppings':[
+                    {
+                        'DeviceName':'/dev/sda1',
+                        'Ebs':{
+                            'Status':'attached',
+                            'DeleteOnTermination':True,
+                            'VolumeId':'vol-038ed85488b0174b2',
+                            'AttachTime':'2017-06-01T21:01:39+00:00'
+                        }
+                    }
+                ],
+                'Architecture':'x86_64',
+                'MatchedFilters':[
+                    'State.Name',
+                    'tag:maid_status',
+                    'tag:BusinessUnit',
+                    'tag:Environment',
+                    'tag:Project',
+                    'tag:OwnerEmail'
+                ],
+                'RootDeviceType':'ebs',
+                'RootDeviceName':'/dev/sda1',
+                'VirtualizationType':'hvm',
+                'Tags':[
+                    {
+                        'Key':'CreatorName',
+                        'Value':'john_theodore'
+                    },
+                    {
+                        'Key':'CreatorId',
+                        'Value':'AIDAIBV3GV5HG5HEIZOO'
+                    }
+                ],
+                'AmiLaunchIndex':0
+            }
+        ]
+    },
     'ebs': {
         'resources': [{
             u'Attachments': [],
@@ -163,6 +290,8 @@ def write_file(file_data, file_dest):
 def get_custodian_policy_email(email_template_data, resources, policy, action,
                                account, region):
     custodian_html_email_jinja_template = jinja2.Template(email_template_data)
+    # import ipdb
+    # ipdb.set_trace()
     return custodian_html_email_jinja_template.render(
         resources=resources,
         policy=policy,
@@ -220,12 +349,12 @@ def get_gleemail_template():
     return ugly_jinja_html
 
 
-def get_final_rendered_email_message(unrendered_email_message):
+def get_final_rendered_email_message(unrendered_email_message, resource_type):
     return get_custodian_policy_email(
         final_unrendered_email_template,
-        resources=email_metadata['ebs']['resources'],
-        policy=email_metadata['ebs']['policy'],
-        action=email_metadata['ebs']['action'],
+        resources=email_metadata[resource_type]['resources'],
+        policy=email_metadata[resource_type]['policy'],
+        action=email_metadata[resource_type]['action'],
         account=email_metadata['account'],
         region=email_metadata['region'])
 
@@ -238,6 +367,7 @@ def get_final_unrendered_email_message():
     jinja_template = get_file_data(
         'email/gleemail-custodian/templates/'
         'custodian-email-template/resources_table.jinja'
+        # '/custodian/email/jinja_template.j2'
     )
     final_unrendered_email_template = rendered_gleemail.replace(
         'custodianresourcetable', jinja_template)
@@ -265,8 +395,14 @@ def tidylib_validate_html(rendered_html_data):
 
 custodian_mail_template_location = '/custodian/email/jinja_template.j2'
 final_unrendered_email_template = get_final_unrendered_email_message()
-final_rendered_email_template = get_final_rendered_email_message(final_unrendered_email_template)
-
+resource_type = os.environ.get('RESOURCE_TYPE', None)
+if not resource_type:
+    print('Need to set env RESOURCE_TYPE=ec2 or some other resource')
+    sys.exit(0)
+final_rendered_email_template = get_final_rendered_email_message(
+    final_unrendered_email_template,
+    resource_type
+)
 
 validate = bool(os.environ.get('EMAIL_VALIDATE', False))
 if validate:
