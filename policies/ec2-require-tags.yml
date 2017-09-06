@@ -24,7 +24,7 @@ policies:
         - ldap_uid_tags
       transport:
         type: sqs
-        queue: https://sqs.us-east-1.amazonaws.com/172119256206/cloudcustodian-mailer-devtest
+        queue: {CC_SQS_URL}
     - type: mark-for-op
       op: stop
       days: 1 
@@ -65,7 +65,7 @@ policies:
         - ldap_uid_tags
       transport:
         type: sqs
-        queue: https://sqs.us-east-1.amazonaws.com/172119256206/cloudcustodian-mailer-devtest
+        queue: {CC_SQS_URL}
     - type: mark-for-op
       op: terminate
       days: 1

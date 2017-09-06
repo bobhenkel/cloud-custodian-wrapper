@@ -1,14 +1,14 @@
 accounts: 
   core-services-dev:
     # regions:
-    #   us-east-2:
+    #   us-east-1:
     all_regions: True
-  # core-services-prod:
-  #   all_regions: True
-  # symc-dev:
-  #   all_regions: True
-  # symc-prod:
-  #   all_regions: True
+  core-services-prod:
+    all_regions: True
+  symc-dev:
+    all_regions: True
+  symc-prod:
+    all_regions: True
   #   regions:
   #     # any regions listed will have all_listed_regions_policies run
   #     us-east-1:
