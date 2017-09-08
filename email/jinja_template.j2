@@ -46,7 +46,7 @@
   {% if tags|length > 0 %}
     <table>
     {% for tag in tags %}
-      {% if tag['Key'] != 'maid_status' %}
+      {% if tag['Key'] != 'auto:custodian:maid-status' %}
         <tr>
           <td style="border-right:1px solid grey; border-bottom:1px solid grey;">{{ tag['Key'] }}</td>
           <td style="border-bottom:1px solid grey;">{{ tag['Value'] }}</td>

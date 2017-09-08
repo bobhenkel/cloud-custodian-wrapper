@@ -34,7 +34,7 @@ email_metadata = {
     'account': 'aws_account_03',
     'region': 'us-east-2',
     'ec2': {
-        'policy': {u'actions': [{u'to': [u'resource-owner', u'ldap_uid_tags'], u'type': u'notify', u'transport': {u'queue': u'https://sqs.us-east-1.amazonaws.com/172119256206/cloudcustodian-mailer', u'type': u'sqs'}, u'template': u'default.html', u'subject': u'URGENT: Your AWS EC2 Resources will be shutdown.'}, {u'type': u'mark-for-op', u'days': 1, u'op': u'stop'}], u'resource': u'ec2', u'name': u'ec2-tag-compliance-mark', u'filters': [{u'State.Name': u'running'}, {u'tag:maid_status': u'absent'}, {u'tag:BusinessUnit': u'absent'}, {u'tag:Environment': u'absent'}, {u'tag:Project': u'absent'}, {u'tag:OwnerEmail': u'absent'}], u'description': u'Schedule a resource that does not meet tag compliance policies\nto be stopped in one day.\n'},
+        'policy': {u'actions': [{u'to': [u'resource-owner', u'ldap_uid_tags'], u'type': u'notify', u'transport': {u'queue': u'https://sqs.us-east-1.amazonaws.com/172119256206/cloudcustodian-mailer', u'type': u'sqs'}, u'template': u'default.html', u'subject': u'URGENT: Your AWS EC2 Resources will be shutdown.'}, {u'type': u'mark-for-op', u'days': 1, u'op': u'stop'}], u'resource': u'ec2', u'name': u'ec2-tag-compliance-mark', u'filters': [{u'State.Name': u'running'}, {u'tag:auto:custodian:maid-status': u'absent'}, {u'tag:BusinessUnit': u'absent'}, {u'tag:Environment': u'absent'}, {u'tag:Project': u'absent'}, {u'tag:OwnerEmail': u'absent'}], u'description': u'Schedule a resource that does not meet tag compliance policies\nto be stopped in one day.\n'},
         'action': {u'to': [u'resource-owner', u'ldap_uid_tags'], u'type': u'notify', u'transport': {u'queue': u'https://sqs.us-east-1.amazonaws.com/172119256206/cloudcustodian-mailer', u'type': u'sqs'}, u'template': u'default.html', u'subject': u'URGENT: Your AWS EC2 Resources will be shutdown.'},
         'resources': [
             {
@@ -137,7 +137,7 @@ email_metadata = {
                 'Architecture':'x86_64',
                 'MatchedFilters':[
                     'State.Name',
-                    'tag:maid_status',
+                    'tag:auto:custodian:maid-status',
                     'tag:BusinessUnit',
                     'tag:Environment',
                     'tag:Project',
@@ -171,7 +171,7 @@ email_metadata = {
             False,
             u'Iops':
             300,
-            u'MatchedFilters': [u'Attachments', u'tag:maid_status'],
+            u'MatchedFilters': [u'Attachments', u'tag:auto:custodian:maid-status'],
             u'Size':
             100,
             u'SnapshotId':
@@ -184,7 +184,7 @@ email_metadata = {
                     u'Value': u'alice@example.com'
                 },
                 {
-                    u'Key': u'maid_status',
+                    u'Key': u'auto:custodian:maid-status',
                     u'Value': u'Resource does not meet policy: delete@2017/04/30'
                 }
             ],
@@ -202,7 +202,7 @@ email_metadata = {
             False,
             u'Iops':
             300,
-            u'MatchedFilters': [u'Attachments', u'tag:maid_status'],
+            u'MatchedFilters': [u'Attachments', u'tag:auto:custodian:maid-status'],
             u'Size':
             100,
             u'SnapshotId':
@@ -215,7 +215,7 @@ email_metadata = {
                     u'Value': u'alice@example.com'
                 },
                 {
-                    u'Key': u'maid_status',
+                    u'Key': u'auto:custodian:maid-status',
                     u'Value': u'Resource does not meet policy: delete@2017/04/30'
                 }
             ],
@@ -251,7 +251,7 @@ email_metadata = {
             u'filters': [{
                 u'Attachments': []
             }, {
-                u'tag:maid_status': u'absent'
+                u'tag:auto:custodian:maid-status': u'absent'
             }],
             u'name':
             u'ebs-mark-unattached-deletion',

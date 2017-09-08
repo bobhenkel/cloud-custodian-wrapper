@@ -8,10 +8,12 @@ policies:
   filters:
     - State.Name: running
     - "tag:aws:autoscaling:groupName": absent
-    - "tag:maid_status": absent
+    - "tag:auto:custodian:maid-status": absent
     - "tag:BusinessUnit": absent
     - "tag:Environment": absent
-    - "tag:Project": absent
+    - "tag:CostCenter": absent
+    - "tag:ProductLine": absent
+    - "tag:AppName": absent
     - "tag:OwnerEmail": absent
 
   actions:
@@ -26,6 +28,7 @@ policies:
         type: sqs
         queue: {CC_SQS_URL}
     - type: mark-for-op
+      tag: auto:custodian:maid-status
       op: stop
       days: 1 
 
@@ -39,10 +42,12 @@ policies:
     - State.Name: running
     - and:
       - "tag:aws:autoscaling:groupName": absent
-      - "tag:maid_status": not-null
+      - "tag:auto:custodian:maid-status": not-null
       - "tag:BusinessUnit": not-null
       - "tag:Environment": not-null
-      - "tag:Project": not-null
+      - "tag:CostCenter": not-null
+      - "tag:ProductLine": not-null
+      - "tag:AppName": not-null
       - "tag:OwnerEmail": not-null
   actions:
     - unmark
@@ -67,6 +72,7 @@ policies:
         type: sqs
         queue: {CC_SQS_URL}
     - type: mark-for-op
+      tag: auto:custodian:maid-status
       op: terminate
       days: 1
 
