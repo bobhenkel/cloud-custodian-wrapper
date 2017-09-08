@@ -35,6 +35,8 @@ policies:
       subject: "URGENT: Your unattached AWS EBS Volumes will be DELETED in 3 DAYS!"
       to:
         - resource-owner
+        - ldap_uid_tags
+        - DL-CPE-AWS-CloudCustodian@symantec.com
       transport:
         type: sqs
         queue: https://sqs.us-east-1.amazonaws.com/172119256206/cloudcustodian-mailer
@@ -64,6 +66,8 @@ policies:
       subject: "URGENT: Your unattached AWS EBS Volumes will be DELETED in 15 DAYS!"
       to:
         - resource-owner
+        - ldap_uid_tags
+        - DL-CPE-AWS-CloudCustodian@symantec.com
       transport:
         type: sqs
         queue: https://sqs.us-east-1.amazonaws.com/172119256206/cloudcustodian-mailer
@@ -98,6 +102,8 @@ policies:
       subject: "Your AWS unattached EBS Volumes Were Deleted"
       to:
         - resource-owner
+        - ldap_uid_tags
+        - DL-CPE-AWS-CloudCustodian@symantec.com
       transport:
         type: sqs
         queue: https://sqs.us-east-1.amazonaws.com/172119256206/cloudcustodian-mailer

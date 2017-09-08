@@ -17,7 +17,7 @@
         <table cellspacing="0" cellpadding="0" border="0">
           <tr>
             <td class="nowrap cellpadding" style="white-space: nowrap; overflow: hidden; padding-bottom: 10px; padding-right: 10px;"><strong>AWS ACCOUNT NAME</strong></td>
-            <td class="cellpadding" style="padding-bottom: 10px; padding-right: 10px;"><a href="https://{{ account }}.signin.aws.amazon.com/console">{{ account }}</a></td>
+            <td class="cellpadding" style="padding-bottom: 10px; padding-right: 10px;">{{ account }}</td>
           </tr>
           <tr>
             <td class="nowrap cellpadding" style="white-space: nowrap; overflow: hidden; padding-bottom: 10px; padding-right: 10px;"><strong>AWS REGION NAME</strong></td>
@@ -63,6 +63,14 @@
 
 {% macro get_ec2_search_hyperlink(ec2_id, resource, action, policy, region) -%}
 <a href="https://{{ region }}.console.aws.amazon.com/ec2/v2/home?region={{ region }}#Instances:search={{ ec2_id }}">{{ ec2_id }}</a>
+<br>
+<p class="redalert">
+  <span class="underline">
+    <strong>
+      <a href="https://checkmytags.symcpe.io/instance/{{ ec2_id }}">CHECK MY TAGS</a>
+    </strong>
+  </span>
+</p>
 {%- endmacro %}
 
 {% macro pretty_print_datetime(datetime_string, resource, action, policy, region) -%}

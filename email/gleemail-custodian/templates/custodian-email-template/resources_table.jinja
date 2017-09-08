@@ -27,6 +27,14 @@
 
 {% macro get_ec2_search_hyperlink(ec2_id, resource, action, policy, region) -%}
 <a href="https://{{ region }}.console.aws.amazon.com/ec2/v2/home?region={{ region }}#Instances:search={{ ec2_id }}">{{ ec2_id }}</a>
+<br>
+<p class="redalert">
+  <span class="underline">
+    <strong>
+      <a href="https://checkmytags.symcpe.io/instance/{{ ec2_id }}">CHECK MY TAGS</a>
+    </strong>
+  </span>
+</p>
 {%- endmacro %}
 
 {% macro pretty_print_datetime(datetime_string, resource, action, policy, region) -%}

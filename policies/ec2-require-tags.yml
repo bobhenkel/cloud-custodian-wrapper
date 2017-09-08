@@ -4,7 +4,7 @@ policies:
   resource: ec2
   comments: |
     Schedule a resource that does not meet tag compliance policies
-    to be stopped in one day.
+    to be stopped in 5 days.
   filters:
     - State.Name: running
     - "tag:aws:autoscaling:groupName": absent
@@ -24,13 +24,14 @@ policies:
       to:
         - resource-owner
         - ldap_uid_tags
+        - DL-CPE-AWS-CloudCustodian@symantec.com
       transport:
         type: sqs
-        queue: {CC_SQS_URL}
+        queue: https://sqs.us-east-1.amazonaws.com/172119256206/cloudcustodian-mailer
     - type: mark-for-op
       tag: auto:custodian:maid-status
       op: stop
-      days: 1 
+      days: 5
 
 - name: ec2-tag-compliance-unmark
   resource: ec2
@@ -55,7 +56,7 @@ policies:
 - name: ec2-tag-noncompliance-mark-terminate
   resource: ec2
   comments: |
-    Terminate any instances violating the tagging policy 2 days after initially found.
+    Terminate any instances violating the tagging policy 5 days after shutdown.
   filters:
     - type: marked-for-op
       op: stop
@@ -68,13 +69,14 @@ policies:
       to:
         - resource-owner
         - ldap_uid_tags
+        - DL-CPE-AWS-CloudCustodian@symantec.com
       transport:
         type: sqs
-        queue: {CC_SQS_URL}
+        queue: https://sqs.us-east-1.amazonaws.com/172119256206/cloudcustodian-mailer
     - type: mark-for-op
       tag: auto:custodian:maid-status
       op: terminate
-      days: 1
+      days: 5
 
 - name: ec2-tag-noncompliance-terminate
   resource: ec2

@@ -1,26 +1,25 @@
 accounts: 
   core-services-dev:
-    # regions:
-    #   us-east-1:
-    all_regions: True
+    account_policies:
+      - ec2-require-tags.yml
+    run_global_policies: True
   core-services-prod:
-    all_regions: True
+    run_global_policies: True
   symc-dev:
-    all_regions: True
+    run_global_policies: True
   symc-prod:
-    all_regions: True
+    run_global_policies: True
   #   regions:
-  #     # any regions listed will have all_listed_regions_policies run
+  #     # any regions listed will have global_policies run
   #     us-east-1:
   # #     # us-west-1:
         # region_policies are only run in this region alone
         # 'region_policies':
         #  - 'ec2_enforce_tagging.yml'
-# all_listed_regions_policies get run only in regions listed under accounts.
-# So if you did all_regions, each of the global run policies would run in all regions.
+# global_policies get run only in regions listed under accounts.
+# So if you did run_global_policies, each of the global run policies would run in all regions.
 # If you only listed us-east-1 under a regions key for an account, only us-east-1 would be run.
-all_listed_regions_policies:
-  # - ec2-require-tags.yml
+global_policies:
   - ebs_delete_on_expiresat_tag.yml
   - ebs_garbage_collect_unattached_volumes.yml
   - ec2_delete_on_expiresat_tag.yml
