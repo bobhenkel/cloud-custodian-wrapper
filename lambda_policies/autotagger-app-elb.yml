@@ -1,0 +1,16 @@
+policies:
+- name: auto-tag-app-elb
+  description: |
+    Autotags any newly created ELBs
+  resource: app-elb
+  mode:
+    type: cloudtrail
+    role: arn:aws:iam::830317098777:role/custodian-auto-tag-lambda
+    events:
+      - source: elasticloadbalancing.amazonaws.com
+        event: CreateLoadBalancer
+        ids: "requestParameters.name"
+  actions:
+  - type: auto-tag-user
+    tag: auto:tagging:creator-name
+    principal_id_tag: auto:tagging:creator-id

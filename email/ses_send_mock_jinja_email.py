@@ -290,8 +290,6 @@ def write_file(file_data, file_dest):
 def get_custodian_policy_email(email_template_data, resources, policy, action,
                                account, region):
     custodian_html_email_jinja_template = jinja2.Template(email_template_data)
-    # import ipdb
-    # ipdb.set_trace()
     return custodian_html_email_jinja_template.render(
         resources=resources,
         policy=policy,

@@ -1,0 +1,10 @@
+policies:
+- name: global-ssh-port
+  resource: security-group
+  comment: |
+    Detects and reports Security Groups with a Globally Accessible Administrative Port for SSH (tcp/22)
+  filters:
+    - type: ingress
+      IpProtocol: tcp
+      Ports: [22]
+      IpRanges[].CidrIp: 0.0.0.0/0

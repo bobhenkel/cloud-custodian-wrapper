@@ -1,0 +1,12 @@
+policies:
+  - name: s3-deny-global-policy-statements
+    region: us-east-1
+    resource: s3
+    filters:
+      - type: cross-account
+        whitelist_from: 
+            url: accounts-whitelist.txt
+            format: txt
+    actions:
+      - type: remove-statements
+        statement_ids: matched

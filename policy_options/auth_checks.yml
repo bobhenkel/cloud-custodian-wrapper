@@ -1,0 +1,42 @@
+policies:
+## CIS 1.12  - Ensure no root account access key exists
+
+- name: account-root-access-keys-check
+  resource: account
+  comments: |
+    Verifies root access keys don't exist anymore
+  filters:
+      - type: iam-summary
+        key: AccountAccessKeysPresent
+        value: true
+        op: eq
+        value_type: swap
+
+
+## CIS 1.13  - Ensure MFA enabled for root account
+
+- name: account-root-mfa-check
+  resource: account
+  comments: |
+     Verifies if MFA is enabled for root user
+  filters:
+      - type: iam-summary
+        key: AccountMFAEnabled
+        value: false
+        op: eq
+        value_type: swap
+
+
+## CIS 2.1  - Ensure CloudTrail is enabled in all regions
+
+- name: account-cloudtrail-enabled
+  resource: account
+  description: |
+    Checks to make sure CloudTrail is enabled on the account
+    for all regions.
+  filters:
+     - type: check-cloudtrail
+       global-events: false
+       multi-region: false
+       running: false
+       file-digest: false

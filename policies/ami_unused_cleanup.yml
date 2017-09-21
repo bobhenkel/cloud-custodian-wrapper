@@ -1,0 +1,16 @@
+policies:
+  - name: ami-unused
+    resource: ami
+    filters:
+      - type: value
+        key: tag:Preferred
+        op: equal
+        value: 'true'
+      - type: unused
+        value: true
+      - type: image-age
+        days: 30
+        op: gt
+    actions:
+      - type: deregister
+        delete_source: true

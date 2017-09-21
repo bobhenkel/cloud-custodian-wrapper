@@ -60,15 +60,14 @@ def get_all_custodian_run_commands(wrapper_config, secrets, aws_all_regions,
         )
         if global_policies is None:
             global_policies = []
-        global_policies = global_policies + account_policies
-
+        all_account_global_policies = global_policies + account_policies
         if run_global_policies:
             custodian_run_commands = custodian_run_commands + \
                 get_custodian_run_cmds(
                     account_name,
                     aws_all_regions,
                     sts_role,
-                    global_policies,
+                    all_account_global_policies,
                     s3_logging_bucket)
 
         if 'regions' in wrapper_config['accounts'][account_name]:
@@ -81,7 +80,7 @@ def get_all_custodian_run_commands(wrapper_config, secrets, aws_all_regions,
                 region_policies = region_policies_set and 'region_policies' in wrapper_config[
                     'accounts'][account_name]['regions'][region]
                 # if region_specific_policies exist, run
-                # global_policies and region_specific_policies for
+                # all_account_global_policies and region_specific_policies for
                 # this region
                 if region_policies:
                     region_specific_policies = wrapper_config['accounts'][
@@ -89,16 +88,16 @@ def get_all_custodian_run_commands(wrapper_config, secrets, aws_all_regions,
                     if run_global_policies:
                         region_policies = region_specific_policies
                     else:
-                        region_policies = region_specific_policies + global_policies
+                        region_policies = region_specific_policies + all_account_global_policies
                     custodian_run_commands = custodian_run_commands + \
                         get_custodian_run_cmds(
                             account_name, [region], sts_role, region_policies, s3_logging_bucket)
                 # if not region_specific_policies exist, just run the
-                # global_policies for this region
+                # all_account_global_policies for this region
                 elif not run_global_policies:
                     custodian_run_commands = custodian_run_commands + \
                         get_custodian_run_cmds(account_name, [region], sts_role,
-                            global_policies, s3_logging_bucket)
+                            all_account_global_policies, s3_logging_bucket)
     return custodian_run_commands
 
 
@@ -151,15 +150,15 @@ def clear_all_cache(cache_dir):
 
 
 def main_loop(parallel=True, run_once=False, run_mailer=False):
-    aws_cache_dir               = 'aws_cache'
-    s3_logging_bucket           = secrets['s3_logging_bucket']
-    wrapper_config              = utils.get_wrapper_config()
-    global_policies = wrapper_config['global_policies']
-    aws_all_regions             = utils.aws_get_all_regions()
-    last_edit_time              = utils.get_latest_file_change_time()
-    start_log_msg               = '\n\nLatest code file change was on: %s' % last_edit_time
-    all_custodian_commands      = get_all_custodian_run_commands(wrapper_config, secrets,
-        aws_all_regions, global_policies, s3_logging_bucket)
+    aws_cache_dir                = 'aws_cache'
+    s3_logging_bucket            = secrets['s3_logging_bucket']
+    wrapper_config               = utils.get_wrapper_config()
+    all_accounts_global_policies = wrapper_config['global_policies']
+    aws_all_regions              = utils.aws_get_all_regions()
+    last_edit_time               = utils.get_latest_file_change_time()
+    start_log_msg                = '\n\nLatest code file change was on: %s' % last_edit_time
+    all_custodian_commands       = get_all_custodian_run_commands(wrapper_config, secrets,
+        aws_all_regions, all_accounts_global_policies, s3_logging_bucket)
     logging.info(start_log_msg)
     qty_custodian_run_commands = len(all_custodian_commands)
     while True:

@@ -1,0 +1,7 @@
+policies:
+- name: subnet-acl
+  resource: network-acl
+  filters:
+    - type: subnet
+      key: "tag:Location"
+      value: Public

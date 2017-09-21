@@ -1,0 +1,17 @@
+policies:
+- name: auto-tag-rds-instance
+  description: |
+    Tags any newly created RDS with auto:tagging:creator-name identifier
+  resource: rds
+  mode:
+    type: cloudtrail
+    role: arn:aws:iam::830317098777:role/custodian-auto-tag-lambda
+    events:
+      - CreateDBInstance
+
+  filters:
+   - "tag:auto:tagging:creator-name": absent
+  actions:
+   - type: auto-tag-user
+     tag: auto:tagging:creator-name
+     principal_id_tag: auto:tagging:creator-id

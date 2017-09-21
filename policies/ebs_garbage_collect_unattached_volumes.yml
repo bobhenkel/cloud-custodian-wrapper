@@ -30,6 +30,7 @@ policies:
       days: 3
     - type: notify
       priority_header: '1'
+      email_ldap_username_manager: True
       template_format: html
       template: /custodian/email/jinja_template.j2
       subject: "URGENT: Your unattached AWS EBS Volumes will be DELETED in 3 DAYS!"
@@ -39,7 +40,7 @@ policies:
         - DL-CPE-AWS-CloudCustodian@symantec.com
       transport:
         type: sqs
-        queue: https://sqs.us-east-1.amazonaws.com/172119256206/cloudcustodian-mailer
+        queue: {CC_SQS_URL}
 
 - name: ebs-mark-unattached-deletion
   resource: ebs
@@ -61,6 +62,7 @@ policies:
       days: 15
     - type: notify
       priority_header: '1'
+      email_ldap_username_manager: True
       template_format: html
       template: /custodian/email/jinja_template.j2
       subject: "URGENT: Your unattached AWS EBS Volumes will be DELETED in 15 DAYS!"
@@ -70,7 +72,7 @@ policies:
         - DL-CPE-AWS-CloudCustodian@symantec.com
       transport:
         type: sqs
-        queue: https://sqs.us-east-1.amazonaws.com/172119256206/cloudcustodian-mailer
+        queue: {CC_SQS_URL}
 
 - name: ebs-unmark-attached-deletion
   resource: ebs
@@ -98,6 +100,7 @@ policies:
     - delete
     - type: notify
       template_format: html
+      email_ldap_username_manager: True
       template: /custodian/email/jinja_template.j2
       subject: "Your AWS unattached EBS Volumes Were Deleted"
       to:
@@ -106,4 +109,4 @@ policies:
         - DL-CPE-AWS-CloudCustodian@symantec.com
       transport:
         type: sqs
-        queue: https://sqs.us-east-1.amazonaws.com/172119256206/cloudcustodian-mailer
+        queue: {CC_SQS_URL}

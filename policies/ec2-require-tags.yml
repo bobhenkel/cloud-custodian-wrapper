@@ -9,25 +9,40 @@ policies:
     - State.Name: running
     - "tag:aws:autoscaling:groupName": absent
     - "tag:auto:custodian:maid-status": absent
-    - "tag:BusinessUnit": absent
-    - "tag:Environment": absent
-    - "tag:CostCenter": absent
-    - "tag:ProductLine": absent
-    - "tag:AppName": absent
-    - "tag:OwnerEmail": absent
-
+    - or:
+      - "tag:BusinessUnit": absent
+      - "tag:Environment": absent
+      - "tag:CostCenter": absent
+      - "tag:ProductLine": absent
+      - "tag:AppName": absent
+      - "tag:OwnerEmail": absent
+      - type: value
+        key: tag:Environment
+        op: not-in
+        value: ['dev', 'qa', 'stage', 'load', 'perf', 'prod']
+      - type: value
+        key: tag:BusinessUnit
+        op: not-in
+        value: ['esg', 'norton', 'website-security', 'it', 'sarg', 'gso', 'cyber-insurance', 'cto']
+      - and:
+        - "tag:BusinessUnit": esg
+        - type: value
+          key: tag:ProductLine
+          op: not-in
+          value: ['ess', 'wss', 'star', 'sepc', 'dlp', 'cis', 'vip', 'cwp', 'css', 'mss', 'cpe', 'epmp']
   actions:
     - type: notify
       template_format: html
+      email_ldap_username_manager: True
       template: /custodian/email/jinja_template.j2
-      subject: "URGENT: Your AWS EC2 Resources will be shutdown tomorrow!"
+      subject: "URGENT: Your AWS EC2 Resources will be shutdown in 5 days!"
       to:
         - resource-owner
         - ldap_uid_tags
         - DL-CPE-AWS-CloudCustodian@symantec.com
       transport:
         type: sqs
-        queue: https://sqs.us-east-1.amazonaws.com/172119256206/cloudcustodian-mailer
+        queue: {CC_SQS_URL}
     - type: mark-for-op
       tag: auto:custodian:maid-status
       op: stop
@@ -50,29 +65,47 @@ policies:
       - "tag:ProductLine": not-null
       - "tag:AppName": not-null
       - "tag:OwnerEmail": not-null
+      - type: value
+        key: tag:Environment
+        op: in
+        value: ['dev', 'qa', 'stage', 'load', 'perf', 'prod']
+      - or:
+        - type: value
+          key: tag:BusinessUnit
+          op: in
+          value: ['esg', 'norton', 'website-security', 'it', 'sarg', 'gso', 'cyber-insurance', 'cto']
+        - and:
+          - "tag:BusinessUnit": esg
+          - type: value
+            key: tag:ProductLine
+            op: in
+            value: ['ess', 'wss', 'star', 'sepc', 'saep', 'dlp', 'cis', 'vip', 'cwp', 'css', 'mss', 'cpe', 'epmp']
   actions:
-    - unmark
+    - type: unmark
+      tags: ['auto:custodian:maid-status']
 
 - name: ec2-tag-noncompliance-mark-terminate
   resource: ec2
   comments: |
     Terminate any instances violating the tagging policy 5 days after shutdown.
   filters:
+    - State.Name: running
     - type: marked-for-op
       op: stop
   actions:
     - stop
     - type: notify
       template_format: html
+      email_ldap_username_manager: True
       template: /custodian/email/jinja_template.j2
-      subject: "URGENT: Your AWS EC2 Resources will be terminated tomorrow!"
+      subject: "URGENT: Your AWS EC2 Resources will be terminated in 5 days!"
       to:
         - resource-owner
         - ldap_uid_tags
         - DL-CPE-AWS-CloudCustodian@symantec.com
       transport:
         type: sqs
-        queue: https://sqs.us-east-1.amazonaws.com/172119256206/cloudcustodian-mailer
+        queue: {CC_SQS_URL}
     - type: mark-for-op
       tag: auto:custodian:maid-status
       op: terminate
@@ -86,4 +119,5 @@ policies:
     - type: marked-for-op
       op: terminate 
   actions:
-    - terminate
+    - type: terminate
+      force: true
